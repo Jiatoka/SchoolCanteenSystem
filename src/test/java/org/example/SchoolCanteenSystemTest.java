@@ -9,8 +9,10 @@ import DAO.JDBCUtils.UserAccountDaoImpl;
 import DAO.JDBCUtils.UserDAO.NormalUserDao;
 import DAO.JDBCUtils.UserDAO.NormalUserDaoimpl;
 import Model.LoginUtil;
+import Model.OrderUtil;
 import Model.RegisterUtil;
 import ObjectInstance.Food.Food;
+import ObjectInstance.Order.Order;
 import ObjectInstance.User.Administrator;
 import ObjectInstance.User.NormalUser;
 import ObjectInstance.User.StoreUser;
@@ -18,6 +20,7 @@ import ObjectInstance.UserAccount;
 import Swing.LoginGUI;
 import Swing.RegisterUI;
 import com.mysql.cj.log.Log;
+import com.sun.org.apache.xpath.internal.operations.Or;
 import jdk.jfr.StackTrace;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,6 +32,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
@@ -175,6 +180,49 @@ public class SchoolCanteenSystemTest {
             foodDao.insert(food,kind[i]);
         }
 
+    }
+
+    @Test
+    public void testOrder() throws Exception {
+        Login.login("root","a123456789","3306");
+        FoodDao foodDao=new FoodDaoImpl();
+        List<HashMap<Food,Integer>> foodList=new ArrayList<HashMap<Food, Integer>>();
+        List<Food> foodList1= foodDao.queryAll();
+        HashMap<Food,Integer> hashMap=new HashMap<Food, Integer>();
+
+        hashMap.put(foodList1.get(2),1);
+        foodList.add((HashMap<Food, Integer>) hashMap.clone());
+        hashMap.clear();
+
+        hashMap.put(foodList1.get(8),1);
+        foodList.add((HashMap<Food, Integer>) hashMap.clone());
+        hashMap.clear();
+
+        hashMap.put(foodList1.get(9),1);
+        foodList.add((HashMap<Food, Integer>) hashMap.clone());
+        hashMap.clear();
+
+        //订单
+        OrderUtil.placeOrder(1,1,552,"只因",foodList);
+
+        //查看订单
+        List<Order> orderList=OrderUtil.queryOrder(0,1);
+        System.out.println(new JSONArray(orderList).toString());
+
+        //查看详细订单
+        List<HashMap<Food,Integer>> foodList2=OrderUtil.queryOrderFood(1);
+        for (HashMap<Food,Integer> obj:foodList2){
+            for(Food food:obj.keySet()){
+                System.out.println(food.getFoodName()+":"+obj.get(food));
+            }
+        }
+
+        //接单
+        OrderUtil.receiveOrder(1);
+
+        //查看订单
+        List<Order> orderList1=OrderUtil.queryOrder(1,1);
+        System.out.println(new JSONArray(orderList1).toString());
     }
 
     @Test

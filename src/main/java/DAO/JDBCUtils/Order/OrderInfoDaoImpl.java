@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**访问订单详情表(order_info)**/
-public class OrderInfoDaoImpl {
+public class OrderInfoDaoImpl implements OrderInfoDao{
     private static int count=0;
     public static int maxId=0;
     public static int getCount() {

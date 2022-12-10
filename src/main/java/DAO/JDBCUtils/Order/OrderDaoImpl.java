@@ -66,7 +66,7 @@ public class OrderDaoImpl implements OrderDao{
         ps.setInt(7,order.getState());
         int res=ps.executeUpdate();
         MysqlConnector.closeConnection(conn,ps);
-        return res;
+        return  OrderDaoImpl.maxId;
     }
 
     public int delete(Order order) throws SQLException, ClassNotFoundException {
