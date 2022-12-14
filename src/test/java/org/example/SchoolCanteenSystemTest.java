@@ -4,10 +4,14 @@ import Controller.LoginAndRegisterController;
 import DAO.JDBCUtils.Food.FoodDao;
 import DAO.JDBCUtils.Food.FoodDaoImpl;
 import DAO.JDBCUtils.MysqlConnector;
+import DAO.JDBCUtils.Order.ContactDao;
+import DAO.JDBCUtils.Order.ContactDaoImpl;
 import DAO.JDBCUtils.UserAccountDao;
 import DAO.JDBCUtils.UserAccountDaoImpl;
 import DAO.JDBCUtils.UserDAO.NormalUserDao;
 import DAO.JDBCUtils.UserDAO.NormalUserDaoimpl;
+import DAO.JDBCUtils.View.StoreFoodViewDao;
+import DAO.JDBCUtils.View.StoreFoodViewDaoImpl;
 import Model.LoginUtil;
 import Model.OrderUtil;
 import Model.RegisterUtil;
@@ -17,8 +21,11 @@ import ObjectInstance.User.Administrator;
 import ObjectInstance.User.NormalUser;
 import ObjectInstance.User.StoreUser;
 import ObjectInstance.UserAccount;
+import ObjectInstance.View.StoreFoodView;
 import Swing.LoginGUI;
 import Swing.RegisterUI;
+import Swing.UIPanel.CanteenPanel;
+import Swing.UIPanel.StorePanel;
 import com.mysql.cj.log.Log;
 import com.sun.org.apache.xpath.internal.operations.Or;
 import jdk.jfr.StackTrace;
@@ -27,7 +34,9 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
+import java.security.cert.TrustAnchor;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -152,15 +161,30 @@ public class SchoolCanteenSystemTest {
         LoginUtil.initVar();
     }
     @Test
-    public void test(){
+    public void test() throws InterruptedException {
 //        String a="   123    5    ";
 //        System.out.println(a.trim());
 //        System.out.println((" 123    5 ".trim()).equals(a.trim()));
-        String regx="^[0-9a-zA-Z]{3,20}$";
-        System.out.println(Pattern.matches(regx,"123  "));
-        System.out.println(Pattern.matches(regx,"12  3"));
-        System.out.println(Pattern.matches(regx,"12"));
-        System.out.println(Pattern.matches(regx,"4198deaf"));
+        JFrame jf = new JFrame("测试窗口");
+        jf.setSize(250, 250);
+        jf.setLocationRelativeTo(null);
+        jf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        // 创建文本区域组件
+        JTextArea textArea = new JTextArea();
+        textArea.setLineWrap(true);                         // 自动换行
+        textArea.setFont(new Font(null, Font.PLAIN, 18));   // 设置字体
+
+        // 创建滚动面板, 指定滚动显示的视图组件(textArea), 垂直滚动条一直显示, 水平滚动条从不显示
+        JScrollPane scrollPane = new JScrollPane(
+                textArea,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+        );
+
+        jf.setContentPane(scrollPane);
+        jf.setVisible(true);
+        Thread.sleep(10000);
     }
 
     @Test
@@ -224,7 +248,21 @@ public class SchoolCanteenSystemTest {
         List<Order> orderList1=OrderUtil.queryOrder(1,1);
         System.out.println(new JSONArray(orderList1).toString());
     }
+    @Test
+    public void testContact() throws IOException, SQLException, ClassNotFoundException {
+        Login.login("root","a123456789","3306");
+        OrderUtil.insertContact(1,1,"LiangJiajun","13380874078","哈尔滨工业大学(深圳)荔园6栋804B");
+    }
 
+    @Test
+    public void testView() throws Exception {
+        Login.login("root","a123456789","3306");
+        StoreFoodViewDao storeFoodViewDao=new StoreFoodViewDaoImpl();
+        List<StoreFoodView> storeFoodViewList= storeFoodViewDao.queryById(new StoreUser(1,"",
+                0,"",""));
+        JSONArray jsonArray=new JSONArray(storeFoodViewList);
+        System.out.println(jsonArray);
+    }
     @Test
     public void testUI() throws InterruptedException, IOException {
         Login.login("root","a123456789","3306");
@@ -241,5 +279,26 @@ public class SchoolCanteenSystemTest {
 
         //结束
         System.out.println("退出系统");
+    }
+    @Test
+    public void testUserUIPanel() throws Exception {
+        Login.login("root","a123456789","3306");
+        JFrame jFrame=new JFrame();
+        jFrame.setLocationRelativeTo(null);
+        jFrame.setResizable(false);
+
+        jFrame.setSize(1000,600);
+        CardLayout cardLayout=new CardLayout(10,10);
+        JPanel panel=new JPanel(cardLayout);
+
+        /**使用Panel**/
+        CanteenPanel canteenPanel=new CanteenPanel(cardLayout,panel);
+        panel.add(canteenPanel,"canteen");
+        /**使用Panel**/
+        cardLayout.show(panel,"canteen");
+        jFrame.setContentPane(panel);
+        jFrame.setVisible(true);
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Thread.sleep(100000);
     }
 }

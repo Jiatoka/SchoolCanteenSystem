@@ -18,9 +18,9 @@ public interface CanteenDao {
     int update(Canteen canteen) throws SQLException, ClassNotFoundException;
 
     /**根据主键查询数据**/
-    List<StoreUser> queryByPK(Canteen canteen) throws Exception;
+    List<Canteen> queryByPK(Canteen canteen) throws Exception;
 
     /**查询所有数据**/
-    List<StoreUser> queryAll() throws Exception;
+    List<Canteen> queryAll() throws Exception;
 
 }

@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CanteenDaoImpl {
+public class CanteenDaoImpl implements CanteenDao{
     private static int count=0;
     public static int maxId=0;
     public static int getCount() {
