@@ -3,6 +3,7 @@ package Swing;
 import Controller.Lock.LoginLock;
 import DAO.JDBCUtils.UserDAO.StoreUserDao;
 import DAO.JDBCUtils.UserDAO.StoreUserimpl;
+import Image.ImageUtils;
 import Model.LoginUtil;
 import ObjectInstance.User.Administrator;
 import ObjectInstance.User.NormalUser;
@@ -11,6 +12,7 @@ import ObjectInstance.UserAccount;
 import org.example.Login;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -53,6 +55,13 @@ public class LoginGUI {
 
     public LoginGUI() {
 
+        //登入的logo
+        titleLabel.setIcon(new ImageIcon(ImageUtils.getSchoolIconImage()));
+        titleLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
+        titleLabel.setVerticalTextPosition(SwingConstants.CENTER);
+        titleLabel.setOpaque(false);
+        titleLabel.setForeground(Color.WHITE);
+        titlePanel.setBackground(new Color(60,147,240));
         //登入按钮
         loginButton.addActionListener(new ActionListener() {
             @Override

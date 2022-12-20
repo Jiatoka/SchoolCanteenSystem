@@ -22,6 +22,7 @@ public class OrderUtil {
      * @param foodList 预定的食物
      * @param userId   用户号
      * @param price    价钱
+     * @return orderId 返回订单号
      * **/
     public static int placeOrder(int storeId, int userId, int price,String tips, List<HashMap<Food,Integer>> foodList) throws SQLException, ClassNotFoundException {
         //生成订单记录
@@ -71,8 +72,9 @@ public class OrderUtil {
      * 查询自己的订单
      * @param identity 0:普通用户 1:商家
      * @param id 用户的id
+     * @return 用户所有订单
      * **/
-    public static List<Order>queryOrder(int identity,int id) throws SQLException, ClassNotFoundException {
+    public static List<Order> queryOrder(int identity,int id) throws SQLException, ClassNotFoundException {
         OrderDao orderDao=new OrderDaoImpl();
         Order order=new Order(1,id,id,new Date(),0,"",0);
         List<Order> orderList=orderDao.queryByIndex(order,identity);

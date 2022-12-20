@@ -6,6 +6,7 @@ import DAO.JDBCUtils.Canteen.CanteenDaoImpl;
 import ObjectInstance.Canteen.Canteen;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -36,22 +37,24 @@ public class CanteenPanel extends JPanel {
             JButton jButton=new JButton(canteen.getName());
             jButton.setBackground(new Color(color[colorIndex][0],
                     color[colorIndex][1],color[colorIndex][2]));
-            jButton.setFont(new Font(null, Font.BOLD,60));
+            jButton.setFont(new Font(null, Font.BOLD,50));
             //添加监听器
             addListener(jButton,canteen,cardLayout,jPanel);
             //添加按钮
             jButtons.add(jButton);
         }
         int size=jButtons.size();
+        /**********用于修改选项框布局的核心代码*************/
         //设置布局
-        panel=new JPanel(new GridLayout(size,1,20,20));
-
+        panel=new JPanel(new FlowLayout(FlowLayout.CENTER,10,10));
         //将按钮加入面板
         for (JButton jButton:jButtons){
+            jButton.setPreferredSize(new Dimension(800,100));
             panel.add(jButton);
         }
-        panel.setBorder(new EmptyBorder(20,10,20,10));
-
+        int nums = panel.getComponentCount();  //组件数量
+        panel.setPreferredSize(new Dimension(800,nums*110+10));
+        /********************************************/
         //将面板加入滚动面板
         jScrollPane=new JScrollPane(panel,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);

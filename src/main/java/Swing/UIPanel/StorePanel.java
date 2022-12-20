@@ -50,21 +50,24 @@ public class StorePanel extends JPanel{
             JButton jButton=new JButton(user.getName());
             jButton.setBackground(new Color(color[colorIndex][0],
                     color[colorIndex][1],color[colorIndex][2]));
-            jButton.setFont(new Font(null, Font.BOLD,60));
+            jButton.setFont(new Font(null, Font.BOLD,50));
             //添加监听器
             addListener(jButton,user,cardLayout,jPanel);
             //添加按钮
             jButtons.add(jButton);
         }
         int size=jButtons.size();
-        //设置布局
-        panel=new JPanel(new GridLayout(size,1,20,20));
 
+        /**********用于修改选项框布局的核心代码*************/
+        //设置布局
+        panel=new JPanel(new FlowLayout(FlowLayout.CENTER,10,10));
         //将按钮加入面板
         for (JButton jButton:jButtons){
+            jButton.setPreferredSize(new Dimension(800,100));
             panel.add(jButton);
         }
-        panel.setBorder(new EmptyBorder(20,10,20,10));
+        panel.setPreferredSize(new Dimension(800,size*110+10));
+        /********************************************/
 
         //将面板加入滚动面板
         jScrollPane=new JScrollPane(panel,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -76,7 +79,7 @@ public class StorePanel extends JPanel{
     }
 
     /**添加监听器**/
-    private void addListener(JButton jButton, final StoreUser user, CardLayout cardLayout,JPanel jPanel){
+    private void addListener(JButton jButton, final StoreUser user, final CardLayout cardLayout, final JPanel jPanel){
         // 添加按钮的点击事件监听器
         jButton.addActionListener(new ActionListener() {
             @Override
@@ -84,7 +87,15 @@ public class StorePanel extends JPanel{
                 // 获取到的事件源就是按钮本身
                 System.out.println("按钮被点击");
                 UserPageInfo.setStoreUser(user);
-                //根据给定的食堂进入商家页面
+                //根据给定的商家进入食堂页面
+                try {
+                    FoodPanel foodPanel=new FoodPanel(cardLayout,jPanel);
+                    jPanel.add(foodPanel,"food");
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+                cardLayout.show(jPanel,"food");
+
             }
         });
     }

@@ -23,9 +23,14 @@ import ObjectInstance.User.StoreUser;
 import ObjectInstance.UserAccount;
 import ObjectInstance.View.StoreFoodView;
 import Swing.LoginGUI;
+import Swing.MyInfo.MyInfoPanel;
+import Swing.OrderUI.MyOrderPanel;
 import Swing.RegisterUI;
+import Swing.StoreUserUI.StoreOrderPanel;
 import Swing.UIPanel.CanteenPanel;
+import Image.ImageUtils;
 import Swing.UIPanel.StorePanel;
+import Swing.UserUI;
 import com.mysql.cj.log.Log;
 import com.sun.org.apache.xpath.internal.operations.Or;
 import jdk.jfr.StackTrace;
@@ -261,11 +266,12 @@ public class SchoolCanteenSystemTest {
         List<StoreFoodView> storeFoodViewList= storeFoodViewDao.queryById(new StoreUser(1,"",
                 0,"",""));
         JSONArray jsonArray=new JSONArray(storeFoodViewList);
-        System.out.println(jsonArray);
+        System.out.println(jsonArray.toString());
     }
     @Test
     public void testUI() throws InterruptedException, IOException {
         Login.login("root","a123456789","3306");
+        ImageUtils.initImage();
         //初始化布局
         JFrame jFrame=new JFrame("校园外卖点餐系统");
         LoginGUI loginGUI=new LoginGUI();
@@ -276,16 +282,25 @@ public class SchoolCanteenSystemTest {
 
         //登入和注册页面
         loginAndRegisterController.loginAndRegisterController(jFrame,loginGUI,registerUI);
-
+        UserUI.setPanel(LoginUtil.getIdentity());
+        //进入用户页面
+        jFrame.setSize(1300,800);
+        UserUI userUI=new UserUI();
+        jFrame.setContentPane(userUI.UserPanel);
+        jFrame.setVisible(true);
+        jFrame.setResizable(true);
         //结束
         System.out.println("退出系统");
+        Object Lock=null;
+        Thread.sleep((long)Math.pow(2,30));
     }
     @Test
     public void testUserUIPanel() throws Exception {
         Login.login("root","a123456789","3306");
+        ImageUtils.initImage();
         JFrame jFrame=new JFrame();
         jFrame.setLocationRelativeTo(null);
-        jFrame.setResizable(false);
+//        jFrame.setResizable(false);
 
         jFrame.setSize(1000,600);
         CardLayout cardLayout=new CardLayout(10,10);
@@ -294,8 +309,41 @@ public class SchoolCanteenSystemTest {
         /**使用Panel**/
         CanteenPanel canteenPanel=new CanteenPanel(cardLayout,panel);
         panel.add(canteenPanel,"canteen");
+        MyOrderPanel myOrderPanel=new MyOrderPanel(cardLayout,panel);
+        panel.add(myOrderPanel,"myOrder");
+        MyInfoPanel myInfoPanel=new MyInfoPanel(cardLayout,panel);
+        panel.add(myInfoPanel,"myInfo");
         /**使用Panel**/
-        cardLayout.show(panel,"canteen");
+        cardLayout.show(panel,"myInfo");
+        jFrame.setContentPane(panel);
+        jFrame.setVisible(true);
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Thread.sleep(100000);
+    }
+
+    @Test
+    public  void testStore() throws Exception {
+        Login.login("root","a123456789","3306");
+        ImageUtils.initImage();
+        JFrame jFrame=new JFrame();
+        jFrame.setLocationRelativeTo(null);
+//        jFrame.setResizable(false);
+
+        jFrame.setSize(1000,600);
+        CardLayout cardLayout=new CardLayout(10,10);
+        JPanel panel=new JPanel(cardLayout);
+
+        /**使用Panel**/
+        CanteenPanel canteenPanel=new CanteenPanel(cardLayout,panel);
+        panel.add(canteenPanel,"canteen");
+        MyOrderPanel myOrderPanel=new MyOrderPanel(cardLayout,panel);
+        panel.add(myOrderPanel,"myOrder");
+        MyInfoPanel myInfoPanel=new MyInfoPanel(cardLayout,panel);
+        panel.add(myInfoPanel,"myInfo");
+        StoreOrderPanel storeOrderPanel=new StoreOrderPanel(cardLayout,panel);
+        panel.add(storeOrderPanel,"storeOrderPanel");
+        /**使用Panel**/
+        cardLayout.show(panel,"storeOrderPanel");
         jFrame.setContentPane(panel);
         jFrame.setVisible(true);
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
