@@ -40,6 +40,7 @@ public class LoginAndRegisterController {
                 System.out.println("注册完毕");
                 jFrame.remove(registerUI.RegisterPanel);
             }
+            loginGUI=new LoginGUI();
         }
     }
     /**登入页面布局**/
